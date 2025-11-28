@@ -35,14 +35,47 @@ public class FormSerie4BD extends JFrame {
 
         btnGenerar.addActionListener(this::generarSerie);
         btnConsultar.addActionListener(this::consultarSuma);
-
-
     }
 
     private void generarSerie(ActionEvent e) {
+        txtResultado.setText("");
+        lblEstado.setText("Generando...");
 
+        try (Connection conn = DriverManager.getConnection(connectionString, userDB, passDB)) {
+            String sqlInsert = "{ call PR_INSERTAR_SERIE_4(?) }";
+            CallableStatement cs = conn.prepareCall(sqlInsert);
+
+            for (int i = 0; i <= 3862; i += 4) {
+                cs.setInt(1, i);
+                cs.execute();
+                txtResultado.append(i + ", ");
+            }
+
+            lblEstado.setText("Serie generada y almacenada ✔");
+        } catch (Exception ex) {
+            lblEstado.setText("Error al insertar ❌");
+            ex.printStackTrace();
+        }
     }
 
     private void consultarSuma(ActionEvent e) {
+        try (Connection conn = DriverManager.getConnection(connectionString, userDB, passDB)) {
+            String sqlConsulta = "{ call PR_CONSULTAR_SUMA_SERIE4(?) }";
+            CallableStatement cs = conn.prepareCall(sqlConsulta);
+            cs.registerOutParameter(1, Types.NUMERIC);
+            cs.execute();
+
+            long suma = cs.getLong(1);
+            txtResultado.setText("📌 La suma total consultada desde Oracle es:\n\n" + suma);
+
+            lblEstado.setText("Consulta realizada ✔");
+        } catch (Exception ex) {
+            lblEstado.setText("Error en consulta ❌");
+            ex.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new FormSerie4BD().setVisible(true));
     }
 }
