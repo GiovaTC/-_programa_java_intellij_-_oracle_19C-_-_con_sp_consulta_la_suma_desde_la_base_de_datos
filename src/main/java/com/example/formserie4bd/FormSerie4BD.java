@@ -42,7 +42,7 @@ public class FormSerie4BD extends JFrame {
         lblEstado.setText("Generando...");
 
         try (Connection conn = DriverManager.getConnection(connectionString, userDB, passDB)) {
-            String sqlInsert = "{ call PR_INSERTAR_SERIE_4(?) }";
+            String sqlInsert = "{ call PR_INSERTAR_SERIE4(?) }";
             CallableStatement cs = conn.prepareCall(sqlInsert);
 
             for (int i = 0; i <= 3862; i += 4) {
