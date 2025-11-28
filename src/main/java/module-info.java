@@ -6,6 +6,8 @@ module com.example.formserie4bd {
     requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
     requires org.kordamp.bootstrapfx.core;
+    requires java.desktop;
+    requires java.sql;
 
     opens com.example.formserie4bd to javafx.fxml;
     exports com.example.formserie4bd;
